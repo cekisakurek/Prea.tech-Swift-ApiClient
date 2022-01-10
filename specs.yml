@@ -1,0 +1,111 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: 'Prea.tech'
+servers:
+  - url: 'prea.tech/api'
+paths:
+  /authenticate:
+    post:
+      summary: 'Authentication end point'
+      operationId: authenticate
+      tags:
+        - user
+      requestBody:
+          description: 'email and password is required'
+          required: true
+          content:
+              application/json:
+                  schema:
+                      $ref: '#/components/schemas/User'
+      responses:
+        '422':
+              description: 'Validation Failed'
+              content:
+                  application/json:
+                      schema:
+                            $ref: '#/components/schemas/Error'                
+        '401':
+            description: 'Unauthorized'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Error'
+        '200':
+            description: 'Authenticated'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Token'
+  /register:
+    post:
+        summary: "Register a user"
+        operationId: register
+        tags:
+            - user
+        requestBody:
+            description: "name email and password"
+            required: true
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/User'
+        responses:
+            '422':
+                description: 'Validation Failed'
+                content: 
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+            '200':
+                description: 'Registered'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Token'                       
+components:
+    schemas:
+        User:
+            type: object
+            properties:
+                name:
+                    nullable: true
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+        Token:
+            type: object
+            properties:
+                token:
+                    type: string
+                name:
+                    type: string
+                email:
+                    type:
+                        string
+        Error:
+            type: object
+            properties:
+                message:
+                    type: string
+                errors:
+                    type: object
+                    nullable: true
+                    properties:
+                        name:
+                            type: array
+                            nullable: true
+                            items:
+                                type: string
+                        email:
+                            type: array
+                            nullable: true
+                            items:
+                                type: string
+                        password:
+                            type: array
+                            nullable: true
+                            items: 
+                                type: string
